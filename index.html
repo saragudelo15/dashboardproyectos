@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard - Gestion de proyectos</title>
+        <style>
+            /*Aqui van los estilos*/
+            /* ==========================================================================
+   1. ESTILOS GENERALES Y LAYOUT
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  color: #333;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Barra lateral de navegación (Sidebar) */
+.sidebar {
+  width: 240px;
+  background-color: #1a252f;
+  color: #fff;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar h2 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #34495e;
+  padding-bottom: 10px;
+  color: #ecf0f1;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  margin-bottom: 12px;
+}
+
+.sidebar a {
+  color: #bdc3c7;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.sidebar a:hover {
+  background-color: #34495e;
+  color: #fff;
+}
+
+/* Área principal de contenido */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+header {
+  margin-bottom: 25px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+header h1 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+}
+
+header p {
+  color: #7f8c8d;
+}
+
+/* Tarjetas y Contenedores */
+.section-card {
+  background-color: #fff;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.section-card h2 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  border-left: 4px solid #3498db;
+  padding-left: 10px;
+}
+
+/* Grid para las Herramientas y Técnicas */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.grid-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  background-color: #fafafa;
+}
+
+.grid-card h3 {
+  color: #2980b9;
+  margin-bottom: 8px;
+}
+
+.grid-card p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Estilos para Glosario / Definiciones */
+.glossary-item {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ddd;
+}
+
+.glossary-item:last-child {
+  border-bottom: none;
+}
+
+.glossary-term {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.glossary-item p {
+  line-height: 1.5;
+}
+
+.principles-list {
+  margin: 12px 0 0 22px;
+}
+
+.principles-list li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* Etiquetas/Badges para categorías */
+.tag {
+  display: inline-block;
+  background-color: #e8f4f8;
+  color: #2980b9;
+  font-size: 0.8rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+/* Enlace dentro de las tarjetas */
+.card-link {
+  display: block;
+  margin-top: 10px;
+  color: #2980b9;
+  font-weight: bold;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.card-link:hover {
+  text-decoration: underline;
+}
+        </style>
+    </head>
+    <body>
+        <!--Barra de menu lateral-->
+        <nav class="sidebar">
+            <h2>GP Dashboard</h2>
+            <ul>
+                <li><a href="#Definiciones">1.Definiciones</a></li>
+                <li><a href="#Herramientas">2.Herramientas</a></li>
+                <li><a href="#Tecnicas">3.Técnicas</a></li>
+                <li><a href="#Proyecto">4.Proyecto / Talleres</a></li>
+            </ul>
+
+        </nav>
+
+        <!--Contenido principal-->
+        <main class="main-content">
+            <header>
+                <h1>Dashboard de Sara Lucia Agudelo Tejada : Gestion de proyectos</h1>
+                <p>Espacio de consulta de conceptos , herramientas y tecnicas</p>
+            </header>
+
+            <!--Seccion 1: Definiciones-->
+            <section id="Definiciones" class="section-card">
+                <h2>Definiciones Fundamentales</h2>
+
+                <!--Estructura para agregar definiciones-->
+                <div class="glossary-item">
+                    <p class="glossary-term">1. ¿Qué es un proyecto?</p>
+                    <p>Esfuerzo temporal que se lleva a cabo para crear un producto, servicio o resultado único. Tiene un inicio y un final definidos, y busca cumplir unos objetivos específicos dentro de un alcance, un tiempo y un presupuesto establecidos.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <p class="glossary-term">2. Características de los proyectos</p>
+                    <p>Los proyectos son temporales (tienen fecha de inicio y de cierre) y producen un resultado único. Se desarrollan mediante elaboración progresiva, es decir, se van detallando a medida que avanzan. Cuentan con objetivos claros, usan recursos limitados (personas, tiempo, dinero), involucran a distintos interesados y siempre tienen un grado de riesgo e incertidumbre.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <p class="glossary-term">3. Proyectos vs. operaciones</p>
+                    <p>Los proyectos son temporales y generan un resultado único, mientras que las operaciones son actividades continuas y repetitivas que mantienen funcionando a la organización. El proyecto termina cuando alcanza su objetivo; la operación se mantiene en el tiempo y busca sostener el negocio. Por ejemplo, desarrollar un sistema de gestión de activos es un proyecto, y prestar los equipos de un laboratorio todos los días es una operación.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <p class="glossary-term">4. Habilidades del gerente de proyectos</p>
+                    <p>Un gerente de proyectos necesita liderazgo, comunicación efectiva, negociación, resolución de problemas y toma de decisiones. También debe saber planificar y organizar, gestionar equipos, controlar riesgos, cronograma y presupuesto, y tener pensamiento crítico para adaptarse a los cambios durante el proyecto.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <p class="glossary-term">5. Plan de proyecto</p>
+                    <p>Documento que define cómo se va a ejecutar, monitorear y controlar el proyecto. Reúne el alcance, el cronograma, los costos, la calidad, los recursos, las comunicaciones, los riesgos, las adquisiciones y la gestión de los interesados. Sirve de guía para el equipo y de referencia para medir el avance.</p>
+                </div>
+
+                <div class="glossary-item">
+                    <p class="glossary-term">6. Principios para la gestión de proyectos (PMBOK 8)</p>
+                    <p>En la octava edición de la Guía del PMBOK, el PMI simplificó los 12 principios de la séptima edición en 6. Los principios no son pasos ni reglas fijas: orientan cómo pensar, liderar y tomar decisiones en un proyecto, sin importar si el enfoque es predictivo, ágil o híbrido.</p>
+                    <ol class="principles-list">
+                        <li><strong>Adoptar una visión holística.</strong> Ver el proyecto como un sistema formado por personas, áreas, sistemas y dependencias, y no como partes aisladas. Antes de actuar sobre una parte hay que entender cómo afecta al resto.</li>
+                        <li><strong>Enfocarse en el valor.</strong> El éxito no es solo entregar a tiempo, sino que el resultado responda a lo que realmente necesitan las personas y la organización. Por eso el trabajo se conecta con esas necesidades y se mide el beneficio obtenido.</li>
+                        <li><strong>Integrar la calidad en los procesos y entregables.</strong> La calidad se construye desde el diseño y durante todo el trabajo, no se revisa al final. Implica definir criterios de aceptación claros y prevenir los errores en lugar de corregirlos tarde.</li>
+                        <li><strong>Ser un líder responsable.</strong> Liderar con integridad, honestidad y transparencia, asumir las consecuencias de las propias decisiones y actuar de forma ética, sobre todo cuando hay presión por tiempo o costos.</li>
+                        <li><strong>Integrar la sostenibilidad en todas las áreas del proyecto.</strong> Considerar los impactos a largo plazo (económicos, sociales, ambientales y sobre las personas) durante todo el ciclo de vida del proyecto y del producto.</li>
+                        <li><strong>Construir una cultura empoderada.</strong> Fomentar la confianza para que las personas puedan opinar, decidir y alertar sobre riesgos sin miedo, y se sientan dueñas de su trabajo.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!--Seccion 2: Herramientas-->
+            <section id="Herramientas" class="section-card">
+                <h2>Herramientas de gestion</h2>
+                <p>Herramientas de software para el control de proyectos</p>
+                <div class="grid-container">
+                    <div class="grid-card">
+                        <h3>Nombre de la herramienta</h3>
+                        <p>Descripción</p>
+                        <span class="tag">Area de conocimiento</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!--Seccion 3: Tecnicas-->
+            <section id="Tecnicas" class="section-card">
+                <h2>Tecnicas y marcos de trabajo</h2>
+                <p>Técnicas para analizar, planificar y controlar los proyectos</p>
+                <div class="grid-container">
+                    <div class="grid-card">
+                        <h3>Matriz de Poder e Interés</h3>
+                        <p>Técnica de análisis de interesados que los clasifica según su nivel de poder y de interés en el proyecto. Los ubica en cuatro cuadrantes (gestionar atentamente, mantener satisfecho, mantener informado y monitorear) para definir cómo comunicarse con cada uno. Esta versión permite agregar involucrados y guardar o cargar la matriz en formato JSON.</p>
+                        <a class="card-link" href="plantillamatrizpoderinteres.html" target="_blank">plantillamatrizpoderinteres.html</a>
+                        <span class="tag">Gestión de los interesados</span>
+                    </div>
+                </div>
+            </section>
+
+            <!--Seccion 4: Espacio para cargar Proyectos proyecto/curso-->
+            <section id="Proyecto" class="section-card">
+                <h2>Proyecto desarrollo en clase</h2>
+                <p>Espacio para cargar evidencias de las actividades</p>
+                <div class="glossary-item">
+                    <div class="glossary-term">Numero de clase </div>
+                    <p>Notas o archivos a enlaces del documento</p>
+                </div>
+            </section>
+        </main>
+    </body>
+</html> 
