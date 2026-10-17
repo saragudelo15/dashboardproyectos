@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Taller: Matriz de Poder e Interés con JSON</title>
+  <style>
+    * { box-sizing: border-box; } /* Incluye padding y borde dentro del ancho/alto declarado */
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; } /* Estilo base del documento */
+
+    .panel-control { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } /* Tarjeta contenedora del formulario y acciones JSON */
+    .panel-control form, .panel-control .json-actions { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; } /* Alinea los controles en fila con espacio entre ellos */
+
+    .matrix-container { /* Define la cuadrícula 2x2 de la matriz */
+      display: grid; /* Activa el layout de grilla */
+      grid-template-columns: 1fr 1fr; /* Dos columnas de igual ancho */
+      grid-template-rows: 1fr 1fr; /* Dos filas de igual alto */
+      width: 600px; /* Ancho fijo de la matriz */
+      height: 600px; /* Alto fijo de la matriz */
+      border: 3px solid #333; /* Borde exterior de la matriz */
+      position: relative; /* Contexto de posicionamiento para las etiquetas absolutas */
+      margin: 0 auto; /* Centra la matriz horizontalmente */
+      background-color: #fff; /* Fondo blanco de la matriz */
+    }
+
+    .quadrant { border: 1px dashed #bbb; padding: 10px; position: relative; overflow: hidden; } /* Estilo común de cada cuadrante */
+    .q-manage { background-color: #d1e7dd; } /* Poder Alto, Interés Alto */
+    .q-satisfy { background-color: #fff3cd; } /* Poder Alto, Interés Bajo */
+    .q-inform { background-color: #cff4fc; }  /* Poder Bajo, Interés Alto */
+    .q-monitor { background-color: #f8d7da; } /* Poder Bajo, Interés Bajo */
+
+    .quadrant-title { font-weight: bold; font-size: 14px; opacity: 0.7; pointer-events: none; } /* Estilo del texto que identifica cada cuadrante */
+
+    .tag { /* Estilo de las etiquetas de involucrados sobre la matriz */
+      position: absolute; /* Se posiciona respecto a .matrix-container */
+      background: #212529; /* Color de fondo de la etiqueta */
+      color: #fff; /* Color del texto de la etiqueta */
+      padding: 4px 8px; /* Espaciado interno de la etiqueta */
+      border-radius: 4px; /* Bordes redondeados de la etiqueta */
+      font-size: 11px; /* Tamaño de fuente de la etiqueta */
+      transform: translate(-50%, 50%); /* Centra la etiqueta sobre sus coordenadas */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Sombra para resaltar la etiqueta */
+      cursor: pointer; /* Cursor de mano al pasar sobre la etiqueta */
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Fase de Análisis: Matriz de Poder e Interés (MML)</h2>
+
+  <div class="panel-control"> <!-- Panel superior con el formulario y las acciones de JSON -->
+    <!-- Formulario para agregar involucrados -->
+    <form id="stakeholderForm"> <!-- Formulario que captura los datos de un nuevo involucrado -->
+      <input type="text" id="nombre" placeholder="Nombre (ej. Sponsor, DevOps)" required> <!-- Campo de texto para el nombre del involucrado -->
+      <label>Poder (1-10): <input type="number" id="poder" min="1" max="10" required></label> <!-- Campo numérico para el nivel de poder -->
+      <label>Interés (1-10): <input type="number" id="interes" min="1" max="10" required></label> <!-- Campo numérico para el nivel de interés -->
+      <button type="submit">Agregar Involucrado</button> <!-- Botón que envía el formulario -->
+    </form>
+
+    <hr> <!-- Separador visual entre el formulario y las acciones JSON -->
+
+    <!-- Controles para la persistencia mediante JSON -->
+    <div class="json-actions"> <!-- Contenedor de los botones de exportar/importar/limpiar -->
+      <button id="exportJsonBtn">Exportar Matriz a JSON</button> <!-- Botón para descargar el estado actual como JSON -->
+      <label for="importJsonInput" style="cursor: pointer; background: #e2e3e5; padding: 5px 10px; border-radius: 4px; border: 1px solid #ccc;"> <!-- Etiqueta estilizada que actúa como botón para el input de archivo oculto -->
+        Cargar JSON:
+      </label>
+      <input type="file" id="importJsonInput" accept=".json" style="display: none;"> <!-- Input de archivo oculto que dispara la carga del JSON -->
+      <button id="clearBtn">Limpiar Matriz</button> <!-- Botón para vaciar la lista de involucrados -->
+    </div>
+  </div>
+
+  <!-- Contenedor Visual 2x2 -->
+  <div class="matrix-container" id="matrix"> <!-- Grilla 2x2 donde se dibujan los cuadrantes y las etiquetas -->
+    <div class="quadrant q-satisfy"><span class="quadrant-title">Mantener Satisfecho (Poder ↑ / Interés ↓)</span></div> <!-- Cuadrante superior izquierdo -->
+    <div class="quadrant q-manage"><span class="quadrant-title">Gestionar Atentamente (Poder ↑ / Interés ↑)</span></div> <!-- Cuadrante superior derecho -->
+    <div class="quadrant q-monitor"><span class="quadrant-title">Monitorear (Poder ↓ / Interés ↓)</span></div> <!-- Cuadrante inferior izquierdo -->
+    <div class="quadrant q-inform"><span class="quadrant-title">Mantener Informado (Poder ↓ / Interés ↑)</span></div> <!-- Cuadrante inferior derecho -->
+  </div>
+
+  <script>
+    // Estado: arreglo de involucrados { id, nombre, poder, interes }
+    // Precargado con el caso de estudio "Sistema de Gestión de Activos IUTEDE"
+    let stakeholders = [
+      { id: 1, nombre: "Personal de TI",          poder: 9, interes: 9 }, // Administra, da mantenimiento y controla la disponibilidad de los activos -> Gestionar Atentamente
+      { id: 2, nombre: "Profesores",               poder: 6, interes: 9 }, // Solicitan equipos para sus clases -> Gestionar Atentamente
+      { id: 3, nombre: "Monitores de Laboratorio",  poder: 5, interes: 8 }, // Operan el día a día del préstamo/uso de equipos -> Gestionar Atentamente
+      { id: 4, nombre: "Estudiantes",               poder: 3, interes: 9 }, // Solicitan/reservan activos, alto interés pero poca influencia -> Mantener Informado
+      { id: 5, nombre: "Dirección/Coordinación IUTEDE", poder: 9, interes: 4 }, // Patrocina el proyecto, alta influencia pero seguimiento puntual -> Mantener Satisfecho
+      { id: 6, nombre: "Proveedores de Equipos",    poder: 4, interes: 3 }, // Suministran/reparan equipos, involucramiento ocasional -> Monitorear
+      { id: 7, nombre: "Seguridad de Laboratorios", poder: 3, interes: 2 }  // Control de acceso a las salas, bajo interés en el sistema -> Monitorear
+    ];
+
+    const form = document.getElementById('stakeholderForm'); // Formulario de alta de involucrados
+    const matrixContainer = document.getElementById('matrix'); // Contenedor de la grilla 2x2
+
+    renderMatrix(); // dibuja los involucrados precargados al abrir la página
+
+    // 1. Alta de involucrado: lee el formulario, lo guarda en el estado y redibuja
+    form.addEventListener('submit', function(e) {
+      e.preventDefault(); // no recargar la página
+
+      const nuevoStakeholder = {
+        id: Date.now(), // id único simple
+        nombre: document.getElementById('nombre').value,
+        poder: parseInt(document.getElementById('poder').value),
+        interes: parseInt(document.getElementById('interes').value)
+      };
+
+      stakeholders.push(nuevoStakeholder); // agrega el nuevo involucrado al estado
+      renderMatrix(); // redibuja la matriz con el nuevo dato
+      form.reset(); // limpia el formulario para el siguiente registro
+    });
+
+    // 2. Dibuja una etiqueta por cada involucrado, ubicada según poder/interés
+    function renderMatrix() {
+      document.querySelectorAll('.tag').forEach(tag => tag.remove()); // limpia etiquetas anteriores
+
+      stakeholders.forEach(stk => {
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        tag.textContent = stk.nombre;
+
+        // Escala 1-10 -> 5%-95% del eje, dejando margen a los bordes.
+        // X = interés (izquierda->derecha); Y = poder invertido (abajo->arriba)
+        const leftPercent = ((stk.interes - 1) / 9) * 90 + 5; // interés 1-10 -> 5%-95% (izq->der), sin invertir
+        const topPercent = 100 - (((stk.poder - 1) / 9) * 90 + 5); // poder 1-10 -> 5%-95% e invertido: poder alto queda arriba (top% bajo)
+
+        tag.style.left = `${leftPercent}%`; // posición horizontal de la etiqueta dentro del contenedor
+        tag.style.top = `${topPercent}%`; // posición vertical de la etiqueta dentro del contenedor
+        tag.title = `Poder: ${stk.poder}, Interés: ${stk.interes}`; // tooltip al pasar el mouse
+
+        matrixContainer.appendChild(tag);
+      });
+    }
+
+    // 3. Exportar: descarga el estado actual como archivo .json
+    document.getElementById('exportJsonBtn').addEventListener('click', function() {
+      if (stakeholders.length === 0) {
+        alert("La matriz está vacía. Registra involucrados antes de exportar.");
+        return;
+      }
+
+      const jsonString = JSON.stringify(stakeholders, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob); // URL temporal para descargar el blob
+
+      const a = document.createElement('a'); // enlace invisible usado solo para disparar la descarga
+      a.href = url;
+      a.download = `matriz_involucrados_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+
+      URL.revokeObjectURL(url); // libera la URL temporal
+    });
+
+    // 4. Importar: lee un .json elegido por el usuario y reemplaza el estado
+    document.getElementById('importJsonInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const importedData = JSON.parse(event.target.result);
+          if (Array.isArray(importedData)) {
+            stakeholders = importedData;
+            renderMatrix();
+            alert("¡Matriz cargada exitosamente!");
+          } else {
+            alert("El archivo JSON no tiene la estructura de arreglo válida.");
+          }
+        } catch (err) {
+          alert("Error al leer el archivo JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // 5. Limpiar: vacía el estado y redibuja la matriz sin etiquetas
+    document.getElementById('clearBtn').addEventListener('click', function() {
+      stakeholders = [];
+      renderMatrix();
+    });
+  </script>
+</body>
+</html>
